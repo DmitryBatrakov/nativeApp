@@ -1,15 +1,16 @@
 import { Text, View } from "react-native";
-import { Colors } from "../../shared/tokens";
-import { useAtom } from "jotai";
-import { profileAtom } from "../../entities/user/model/user.state";
+import { Button } from "../../shared/Button/Button";
+import { useSetAtom } from "jotai";
+import { logoutAtom } from "../../entities/auth/model/auth.state";
 
 export default function MyCourses() {
-
-    const [profile] = useAtom(profileAtom)
+    const logout = useSetAtom(logoutAtom);
 
     return (
-            <View>
-                <Text>{profile.profile?.name}</Text>
-            </View>
-    )
+        <View>
+            <Text>Index</Text>
+            <Button text="Logout" onPress={logout} />
+        </View>
+    );
 }
+

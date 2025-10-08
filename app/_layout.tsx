@@ -1,15 +1,13 @@
 import { Stack, SplashScreen } from "expo-router";
 import { Colors } from "../shared/tokens";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-
-    const insets = useSafeAreaInsets();
     
     const [loaded, error] = useFonts({
         FiraSansRegular: require("../assets/fonts/FiraSans-Regular.ttf"),
@@ -17,16 +15,17 @@ export default function RootLayout() {
     });
 
     useEffect(() => {
+        if (error) {
+            throw error;
+        }
+    }, [error])
+
+    useEffect(() => {
         if (loaded) {
             SplashScreen.hideAsync();
         }
     },[loaded])
 
-    useEffect(() => {
-        if (error) {
-            throw error;
-        }
-    }, [error])
 
     if(!loaded) {
         return null
@@ -37,7 +36,7 @@ export default function RootLayout() {
             <StatusBar style="light" />
             <Stack
                 screenOptions={{
-                    // statusBarStyle: "dark",
+                    // statusBarColor: "dark", 
                     contentStyle: {
                         backgroundColor: Colors.black,
                     },

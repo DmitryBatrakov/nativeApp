@@ -3,24 +3,43 @@ import { Input } from "../shared/input/input";
 import { Colors, Gaps } from "../shared/tokens";
 import { Button } from "../shared/Button/Button";
 import { ErrorNotification } from "../shared/ErrorNotification/ErrorNotification";
-import { useState } from "react";
-import { Link } from "expo-router";
+import { useEffect, useState } from "react";
+import { Link, router } from "expo-router";
 import { StyledLink } from "../shared/Link/StyledLink";
+import { loginAtom } from "../entities/auth/model/auth.state";
+import { useAtom } from "jotai";
 
 export default function Login() {
-    const [error, setError] = useState<string | undefined>();
-    console.log("demo");
+    const [localError, setLocalError] = useState<string | undefined>();
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [{access_token, isLoading, error}, login] = useAtom(loginAtom)
 
-    const alert = () => {
-        setError("Error pass or login");
-        setTimeout(() => {
-            setError(undefined);
-        }, 4000);
-    };
+    const submit = () => {
+        if (!email) {
+            setLocalError("Email error");
+            return 
+        }
+        if (!password) {
+            setLocalError("Password error");
+        }
+        login({email, password})
+    }
+    useEffect(() => {
+        if(error) {
+           setLocalError(error); 
+        }
+    }, [error])
+
+    useEffect(() => {
+        if (access_token) {
+            router.replace("/(app)");
+        }
+    }, [access_token]);
 
     return (
         <View style={styles.container}>
-            <ErrorNotification error={error} />
+            <ErrorNotification error={localError} />
             <View style={styles.content}>
                 <Image
                     source={require("../assets/logo.png")}
@@ -28,11 +47,11 @@ export default function Login() {
                     resizeMode="contain"
                 />
                 <View style={styles.form}>
-                    <Input placeholder="Email" />
-                    <Input isPassword placeholder="Password" />
-                    <Button text="Войти" onPress={alert} />
+                    <Input placeholder="Email"  onChangeText={setEmail}/>
+                    <Input isPassword placeholder="Password" onChangeText={setPassword}/>
+                    <Button text="Войти" onPress={submit} isLoading={isLoading} />
                 </View>
-                <StyledLink href={"/app"} text={'Восстановить пароль'} />
+                <StyledLink href={"/restore"} text={'Восстановить пароль'} />
             </View>
         </View>
     );
