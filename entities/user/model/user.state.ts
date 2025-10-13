@@ -10,28 +10,29 @@ export const profileAtom = atom<UserState>({
     error: null,
 });
 
-export const loadProfileAtom = atom(async (get) => {
-     return get(profileAtom)
-},
+export const loadProfileAtom = atom(
+    async (get) => {
+        return get(profileAtom);
+    },
     async (get, set) => {
         const { access_token } = await get(authAtom);
-        set(profileAtom ,{
+        set(profileAtom, {
             isLoading: true,
             profile: null,
             error: null,
-        })
+        });
         try {
-            const {data} = await axios.post<User>(API.profile, {
+            const { data } = await axios.get<User>(API.profile, {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
-                }
+                },
             });
             set(profileAtom, {
                 isLoading: false,
                 profile: data,
                 error: null,
             });
-        } catch(error) {
+        } catch (error) {
             if (error instanceof AxiosError) {
                 set(profileAtom, {
                     isLoading: false,
@@ -41,7 +42,7 @@ export const loadProfileAtom = atom(async (get) => {
             }
         }
     },
-)
+);
 
 export interface UserState {
     profile: User | null;

@@ -13,23 +13,23 @@ export default function Login() {
     const [localError, setLocalError] = useState<string | undefined>();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [{access_token, isLoading, error}, login] = useAtom(loginAtom)
+    const [{ access_token, isLoading, error }, login] = useAtom(loginAtom);
 
     const submit = () => {
         if (!email) {
             setLocalError("Email error");
-            return 
+            return;
         }
         if (!password) {
             setLocalError("Password error");
         }
-        login({email, password})
-    }
+        login({ email, password });
+    };
     useEffect(() => {
-        if(error) {
-           setLocalError(error); 
+        if (error) {
+            setLocalError(error);
         }
-    }, [error])
+    }, [error]);
 
     useEffect(() => {
         if (access_token) {
@@ -47,11 +47,19 @@ export default function Login() {
                     resizeMode="contain"
                 />
                 <View style={styles.form}>
-                    <Input placeholder="Email"  onChangeText={setEmail}/>
-                    <Input isPassword placeholder="Password" onChangeText={setPassword}/>
-                    <Button text="Войти" onPress={submit} isLoading={isLoading} />
+                    <Input placeholder="Email" onChangeText={setEmail} />
+                    <Input
+                        isPassword
+                        placeholder="Password"
+                        onChangeText={setPassword}
+                    />
+                    <Button
+                        text="Войти"
+                        onPress={submit}
+                        isLoading={isLoading}
+                    />
                 </View>
-                <StyledLink href={"/restore"} text={'Восстановить пароль'} />
+                <StyledLink href={"/restore"} text={"Восстановить пароль"} />
             </View>
         </View>
     );

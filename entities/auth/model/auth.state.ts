@@ -35,7 +35,7 @@ export const loginAtom = atom(
             });
             set(authAtom, {
                 isLoading: false,
-                access_token: data.accessToken,
+                access_token: data.access_token,
                 error: null,
             });
         } catch (error) {

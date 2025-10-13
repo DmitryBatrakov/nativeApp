@@ -8,7 +8,6 @@ import { useEffect } from "react";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-    
     const [loaded, error] = useFonts({
         FiraSansRegular: require("../assets/fonts/FiraSans-Regular.ttf"),
         FiraSansSemiBold: require("../assets/fonts/FiraSans-SemiBold.ttf"),
@@ -18,39 +17,38 @@ export default function RootLayout() {
         if (error) {
             throw error;
         }
-    }, [error])
+    }, [error]);
 
     useEffect(() => {
         if (loaded) {
             SplashScreen.hideAsync();
         }
-    },[loaded])
+    }, [loaded]);
 
-
-    if(!loaded) {
-        return null
-    } 
+    if (!loaded) {
+        return null;
+    }
 
     return (
-        <SafeAreaProvider>
-            <StatusBar style="light" />
-            <Stack
-                screenOptions={{
-                    // statusBarColor: "dark", 
-                    contentStyle: {
-                        backgroundColor: Colors.black,
-                    },
-                    headerShown: false,
-                }}
-            >
-                <Stack.Screen name="login" />
-                <Stack.Screen
-                    name="restore"
-                    options={{
-                        presentation: "modal",
+            <SafeAreaProvider>
+                <StatusBar style="light" />
+                <Stack
+                    screenOptions={{
+                        // statusBarColor: "dark",
+                        contentStyle: {
+                            backgroundColor: Colors.black,
+                        },
+                        headerShown: false,
                     }}
-                />
-            </Stack>
-        </SafeAreaProvider>
+                >
+                    <Stack.Screen name="login" />
+                    <Stack.Screen
+                        name="restore"
+                        // options={{
+                        //     presentation: "modal",
+                        // }}
+                    />
+                </Stack>
+            </SafeAreaProvider>
     );
 }
