@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import { Stack, SplashScreen } from "expo-router";
 import { Colors } from "../shared/tokens";
 import { StatusBar } from "expo-status-bar";
@@ -9,8 +10,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const [loaded, error] = useFonts({
-        FiraSansRegular: require("../assets/fonts/FiraSans-Regular.ttf"),
-        FiraSansSemiBold: require("../assets/fonts/FiraSans-SemiBold.ttf"),
+        "FiraSans-Regular": require("../assets/fonts/FiraSans-Regular.ttf"),
+        "FiraSans-SemiBold": require("../assets/fonts/FiraSans-SemiBold.ttf"),
     });
 
     useEffect(() => {
@@ -30,25 +31,25 @@ export default function RootLayout() {
     }
 
     return (
-            <SafeAreaProvider>
-                <StatusBar style="light" />
-                <Stack
-                    screenOptions={{
-                        // statusBarColor: "dark",
-                        contentStyle: {
-                            backgroundColor: Colors.black,
-                        },
-                        headerShown: false,
+        <SafeAreaProvider>
+            <StatusBar style="light" />
+            <Stack
+                screenOptions={{
+                    // statusBarColor: "dark",
+                    contentStyle: {
+                        backgroundColor: Colors.black,
+                    },
+                    headerShown: false,
+                }}
+            >
+                <Stack.Screen name="login" />
+                <Stack.Screen
+                    name="restore"
+                    options={{
+                        presentation: "modal",
                     }}
-                >
-                    <Stack.Screen name="login" />
-                    <Stack.Screen
-                        name="restore"
-                        // options={{
-                        //     presentation: "modal",
-                        // }}
-                    />
-                </Stack>
-            </SafeAreaProvider>
+                />
+            </Stack>
+        </SafeAreaProvider>
     );
 }

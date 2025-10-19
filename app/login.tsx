@@ -8,6 +8,7 @@ import { Link, router } from "expo-router";
 import { StyledLink } from "../shared/Link/StyledLink";
 import { loginAtom } from "../entities/auth/model/auth.state";
 import { useAtom } from "jotai";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
     const [localError, setLocalError] = useState<string | undefined>();
@@ -23,6 +24,7 @@ export default function Login() {
         if (!password) {
             setLocalError("Password error");
         }
+        
         login({ email, password });
     };
     useEffect(() => {
@@ -32,7 +34,7 @@ export default function Login() {
     }, [error]);
 
     useEffect(() => {
-        if (access_token) {
+        if (access_token) {            
             router.replace("/(app)");
         }
     }, [access_token]);

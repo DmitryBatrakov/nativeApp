@@ -1,8 +1,7 @@
 import * as React from "react";
 import Svg, { Circle, Path } from "react-native-svg";
-
 const ProfileIcon = () => (
-    <Svg fill="none" >
+    <Svg width={24} height={24} fill="none">
         <Circle cx={12} cy={7} r={4.25} stroke="#AFB2BF" strokeWidth={1.5} />
         <Path
             stroke="#AFB2BF"

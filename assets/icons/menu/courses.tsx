@@ -1,8 +1,7 @@
 import * as React from "react";
 import Svg, { G, Path, Defs, ClipPath } from "react-native-svg";
-
 const CoursesIcon = () => (
-    <Svg fill="none">
+    <Svg width={24} height={24} fill="none">
         <G clipPath="url(#a)">
             <Path
                 stroke="#AFB2BF"

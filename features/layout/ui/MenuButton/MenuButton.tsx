@@ -5,7 +5,7 @@ import {  useState } from "react";
 import { DrawerActions } from "@react-navigation/native";
 
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function MenuButton({ navigation, ...props }: PressableProps & { navigation: any }) {
 	const [clicked, setClicked] = useState<boolean>(false);
 
