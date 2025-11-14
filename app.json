@@ -3,11 +3,11 @@
     "name": "nativeApp",
     "slug": "nativeApp",
     "version": "1.0.0",
-    "orientation": "portrait",
     "icon": "./assets/splash.png",
     "userInterfaceStyle": "light",
     "backgroundColor": "#16171D",
     "newArchEnabled": true,
+    "extra": { "eas": { "projectId": "92d8adfe-a2cd-4f57-89de-e94e279dd654" } },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -36,6 +36,13 @@
             "./assets/fonts/FiraSans-Regular.ttf",
             "./assets/fonts/FiraSans-SemiBold.ttf"
             ]
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification_icon.png",
+          "color": "#16171D"
         }
       ]
       

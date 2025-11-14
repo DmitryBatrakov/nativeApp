@@ -1,4 +1,12 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+    Dimensions,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { Input } from "../shared/input/input";
 import { Colors, Gaps } from "../shared/tokens";
 import { Button } from "../shared/Button/Button";
@@ -9,12 +17,17 @@ import { StyledLink } from "../shared/Link/StyledLink";
 import { loginAtom } from "../entities/auth/model/auth.state";
 import { useAtom } from "jotai";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useScreenOrientation } from "../shared/hooks";
+import { Orientation } from "expo-screen-orientation";
 
 export default function Login() {
     const [localError, setLocalError] = useState<string | undefined>();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [{ access_token, isLoading, error }, login] = useAtom(loginAtom);
+    const orientation = useScreenOrientation();
+
+    console.log(orientation);
 
     const submit = () => {
         if (!email) {
@@ -24,7 +37,7 @@ export default function Login() {
         if (!password) {
             setLocalError("Password error");
         }
-        
+
         login({ email, password });
     };
     useEffect(() => {
@@ -34,7 +47,7 @@ export default function Login() {
     }, [error]);
 
     useEffect(() => {
-        if (access_token) {            
+        if (access_token) {
             router.replace("/(app)");
         }
     }, [access_token]);
@@ -42,19 +55,53 @@ export default function Login() {
     return (
         <View style={styles.container}>
             <ErrorNotification error={localError} />
-            <View style={styles.content}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "padding"}
+                // behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.content}
+            >
+            {/* <View style={styles.content}> */}
                 <Image
                     source={require("../assets/logo.png")}
                     style={styles.logo}
                     resizeMode="contain"
                 />
                 <View style={styles.form}>
-                    <Input placeholder="Email" onChangeText={setEmail} />
-                    <Input
-                        isPassword
-                        placeholder="Password"
-                        onChangeText={setPassword}
-                    />
+                    <View
+                        style={{
+                            ...styles.inputs,
+                            flexDirection:
+                                orientation === Orientation.PORTRAIT_UP
+                                    ? "column"
+                                    : "row",
+                        }}
+                    >
+                        <Input
+                            style={{
+                                width:
+                                    orientation === Orientation.PORTRAIT_UP
+                                        ? "auto"
+                                        : Dimensions.get("window").width / 2 -
+                                          14 -
+                                          48,
+                            }}
+                            placeholder="Email"
+                            onChangeText={setEmail}
+                        />
+                        <Input
+                            style={{
+                                width:
+                                    orientation === Orientation.PORTRAIT_UP
+                                        ? "auto"
+                                        : Dimensions.get("window").width / 2 -
+                                          14 -
+                                          48,
+                            }}
+                            isPassword
+                            placeholder="Password"
+                            onChangeText={setPassword}
+                        />
+                    </View>
                     <Button
                         text="Войти"
                         onPress={submit}
@@ -62,7 +109,9 @@ export default function Login() {
                     />
                 </View>
                 <StyledLink href={"/restore"} text={"Восстановить пароль"} />
-            </View>
+
+                </KeyboardAvoidingView>
+            {/* </View> */}
         </View>
     );
 }
@@ -83,7 +132,8 @@ const styles = StyleSheet.create({
         gap: Gaps.g16,
     },
     logo: {
-        width: 170,
+        // width: Platform.OS === 'ios' ? 170 : 220,
+        width: Platform.select({ ios: 170, android: 220 }),
     },
     div: {
         flexDirection: "row-reverse",
@@ -94,5 +144,8 @@ const styles = StyleSheet.create({
         color: Colors.link,
         fontSize: 18,
         fontWeight: 600,
+    },
+    inputs: {
+        gap: Gaps.g16,
     },
 });
