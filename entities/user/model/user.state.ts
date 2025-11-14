@@ -10,28 +10,30 @@ export const profileAtom = atom<UserState>({
     error: null,
 });
 
-export const loadProfileAtom = atom(async (get) => {
-     return get(profileAtom)
-},
-    async (get, set) => {
-        const { access_token } = await get(authAtom);
-        set(profileAtom ,{
-            isLoading: true,
-            profile: null,
-            error: null,
-        })
+export const updateProfileAtom = atom(
+    async (get) => {
+        return get(profileAtom);
+    },
+    async (get, set, { photo }: { photo: string }) => {
         try {
-            const {data} = await axios.post<User>(API.profile, {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
+            const { access_token } = await get(authAtom);
+            const { data } = await axios.patch<User>(
+                API.profile,
+                {
+                    photo,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`,
+                    },
                 }
-            });
+            );
             set(profileAtom, {
                 isLoading: false,
                 profile: data,
                 error: null,
             });
-        } catch(error) {
+        } catch (error) {
             if (error instanceof AxiosError) {
                 set(profileAtom, {
                     isLoading: false,
@@ -40,8 +42,43 @@ export const loadProfileAtom = atom(async (get) => {
                 });
             }
         }
+    }
+);
+
+export const loadProfileAtom = atom(
+    (get) => {
+        return get(profileAtom);
     },
-)
+    async (get, set) => {
+        const { access_token } = await get(authAtom);
+        set(profileAtom, {
+            isLoading: true,
+            profile: null,
+            error: null,
+        });
+        try {
+            const { data } = await axios.get<{ profile: User }>(API.profile, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
+
+            set(profileAtom, {
+                isLoading: false,
+                profile: data.profile,
+                error: null,
+            });
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                set(profileAtom, {
+                    isLoading: false,
+                    profile: null,
+                    error: error.response?.data.message ?? error.message,
+                });
+            }
+        }
+    }
+);
 
 export interface UserState {
     profile: User | null;

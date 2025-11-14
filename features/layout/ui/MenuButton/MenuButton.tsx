@@ -5,7 +5,7 @@ import {  useState } from "react";
 import { DrawerActions } from "@react-navigation/native";
 
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function MenuButton({ navigation, ...props }: PressableProps & { navigation: any }) {
 	const [clicked, setClicked] = useState<boolean>(false);
 
@@ -14,8 +14,13 @@ export function MenuButton({ navigation, ...props }: PressableProps & { navigati
             {...props}
             onPressIn={() => setClicked(true)}
             onPressOut={() => setClicked(false)}
+            onPress={() => {
+                navigation.openDrawer();
+                console.log("has openDrawer?", !!navigation.openDrawer);
+            }}
             // onPress={() => navigation.toggleDrawer()}
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+            // onPress={() => navigation.openDrawer()}
+            // onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         >
             <View
                 style={{

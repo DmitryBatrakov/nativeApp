@@ -2,34 +2,43 @@ import {
     DrawerContentComponentProps,
     DrawerContentScrollView,
 } from "@react-navigation/drawer";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Colors } from "../../../../shared/tokens";
 import { StyledLink } from "../../../../shared/Link/StyledLink";
-import { CloseDrawer } from "../../../../features/layout/ui/CloseDrower/CloseDrawer";
+import { CloseDrawer } from "../../../../features/layout/ui/CloseDrawer/CloseDrawer";
 import { useAtom, useSetAtom } from "jotai";
-import { logoutAtom } from "../../../auth/model/auth.state";
-import { loadProfileAtom } from "../../../user/model/user.state";
+import { logoutAtom } from "../../../../entities/auth/model/auth.state";
+import { loadProfileAtom } from "../../../../entities/user/model/user.state";
 import { useEffect } from "react";
 import { UserMenu } from "../../../user/ui/UserMenu/UserMenu";
+import CoursesIcon from "../../../../assets/icons/menu/courses";
+import ProfileIcon from "../../../../assets/icons/menu/profile";
+import { MenuItem } from "../../../../entities/layout/ui/MenuItem/MenuItem";
 
-export default function CustomDrawer(props: DrawerContentComponentProps) {
+const MENU = [
+    { text: "Мои курсы", icon: <CoursesIcon />, path: "index" },
+    { text: "Профиль", icon: <ProfileIcon />, path: "profile" },
+];
+
+export function CustomDrawer(props: DrawerContentComponentProps) {
     const logout = useSetAtom(logoutAtom);
-    const [profile, loadProfile] = useAtom(loadProfileAtom)
+    const [profile, loadProfile] = useAtom(loadProfileAtom);
 
     useEffect(() => {
         loadProfile();
-    },[])
+    }, []);
 
     return (
         <DrawerContentScrollView
             {...props}
             contentContainerStyle={styles.scrollView}
-            
         >
             <View style={styles.content}>
                 <CloseDrawer navigation={props.navigation} />
-                <Text>{profile.profile?.name}</Text>
-                <UserMenu  user={profile.profile} />
+                <UserMenu user={profile.profile} />
+                {MENU.map((menu) => (
+                    <MenuItem key={menu.path} {...menu} drawer={props} />
+                ))}
             </View>
             <View style={styles.footer}>
                 <StyledLink
@@ -51,9 +60,11 @@ const styles = StyleSheet.create({
     scrollView: {
         flex: 1,
         backgroundColor: Colors.black,
+        
     },
     content: {
         flex: 1,
+        height: 200
     },
     footer: {
         gap: 50,
